@@ -31,6 +31,23 @@ type Game struct {
 }
 
 func (g *Game) Update() error {
+
+	if g.MyTriangle.V3.X >= screenWidth || g.MyTriangle.V2.X <= 0 {
+		g.DirectionX = -g.DirectionX
+	}
+
+	g.MyTriangle.V1.X += g.DirectionX
+	g.MyTriangle.V2.X += g.DirectionX
+	g.MyTriangle.V3.X += g.DirectionX
+
+	if g.MyTriangle.V2.Y >= screenHeight || g.MyTriangle.V1.Y <= 0 {
+		g.DirectionY = -g.DirectionY
+	}
+
+	g.MyTriangle.V1.Y += g.DirectionY
+	g.MyTriangle.V2.Y += g.DirectionY
+	g.MyTriangle.V3.Y += g.DirectionY
+
 	return nil
 }
 
