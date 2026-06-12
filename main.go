@@ -12,7 +12,23 @@ const (
 	screenHeight = 240
 )
 
-type Game struct{}
+type Point2D struct {
+	X int
+	Y int
+}
+
+type Triangle2D struct {
+	V1    Point2D
+	V2    Point2D
+	V3    Point2D
+	Color color.Color
+}
+
+type Game struct {
+	MyTriangle Triangle2D
+	DirectionX int
+	DirectionY int
+}
 
 func (g *Game) Update() error {
 	return nil
@@ -20,22 +36,18 @@ func (g *Game) Update() error {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(color.RGBA{30, 30, 30, 255})
-
-	//pixelX := screenWidth / 2
-	//xelY := screenHeight / 2
-
-	//et(pixelX, pixelY, color.RGBA{255, 0, 0, 255})
-	//screen.Set(100, 100, color.RGBA{255, 0, 0, 255})
-
-	//drawLine(screen, 100, 100, pixelX, pixelY, color.RGBA{255, 0, 0, 255})
-	drawLine(screen, 160, 50, 100, 180, color.RGBA{215, 95, 255, 255})
-	drawLine(screen, 100, 180, 220, 180, color.RGBA{215, 95, 255, 255})
-	drawLine(screen, 220, 180, 160, 50, color.RGBA{215, 95, 255, 255})
+	g.MyTriangle.drawTriangle(screen)
 
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 	return screenWidth, screenHeight
+}
+
+func (t *Triangle2D) drawTriangle(screen *ebiten.Image) {
+	drawLine(screen, t.V1.X, t.V1.Y, t.V2.X, t.V2.Y, t.Color)
+	drawLine(screen, t.V2.X, t.V2.Y, t.V3.X, t.V3.Y, t.Color)
+	drawLine(screen, t.V3.X, t.V3.Y, t.V1.X, t.V1.Y, t.Color)
 }
 
 func drawLine(screen *ebiten.Image, x1, y1, x2, y2 int, color color.Color) {
@@ -82,7 +94,16 @@ func main() {
 	ebiten.SetWindowSize(screenWidth*3, screenHeight*3)
 	ebiten.SetWindowTitle("3D engine in Go - phase 1")
 
-	game := &Game{}
+	game := &Game{
+		MyTriangle: Triangle2D{
+			V1:    Point2D{160, 50},
+			V2:    Point2D{100, 180},
+			V3:    Point2D{220, 180},
+			Color: color.RGBA{255, 0, 255, 255},
+		},
+		DirectionX: 2,
+		DirectionY: 2,
+	}
 	if err := ebiten.RunGame(game); err != nil {
 		log.Fatal(err)
 	}
